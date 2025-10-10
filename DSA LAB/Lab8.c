@@ -22,6 +22,35 @@ struct node* insert(struct node* root, float value) {
     return root;
 }
 
+struct node* insertIterative(struct node* root, float value) {
+    struct node* newNode = createNode(value);
+    if (root == NULL) {
+        return newNode;
+    }
+   
+    struct node* parent = NULL;
+    struct node* current = root;
+
+    while (current != NULL) {
+        parent = current;
+        if (value < current->data)
+            current = current->lchild;
+        else if (value > current->data)
+            current = current->rchild;
+        else {
+            free(newNode);
+            return root;
+        }
+    }
+
+    if (value < parent->data)
+        parent->lchild = newNode;
+    else
+        parent->rchild = newNode;
+
+    return root;
+}
+
 void inorder(struct node* root) {
     if (root != NULL) {
         inorder(root->lchild);
@@ -50,26 +79,31 @@ int main() {
     struct node* root = NULL;
     int choice;
     float value;
+
     while (1) {
-        printf("\n1.Insert\n2.Inorder\n3.Preorder\n4.Postorder\n5.Exit\nEnter choice: ");
+        printf("\n1. Insert recursively\n2. Insert iteratively\n3. Inorder\n4. Preorder\n5. Postorder\n5.enter choice: ");
         scanf("%d", &choice);
+
         switch (choice) {
             case 1:
-                printf("Enter value: ");
+                printf("Enter value to insert recursively: ");
                 scanf("%f", &value);
                 root = insert(root, value);
                 break;
             case 2:
-                inorder(root);
+                printf("Enter value to insert iteratively: ");
+                scanf("%f", &value);
+                root = insertIterative(root, value);
                 break;
             case 3:
-                preorder(root);
+                inorder(root);
                 break;
             case 4:
-                postorder(root);
+                preorder(root);
                 break;
             case 5:
-                exit(0);
+                postorder(root);
+                break;
             default:
                 printf("Invalid choice\n");
         }
